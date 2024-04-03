@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useFetcher, { FetcherFunc } from "./useFetcher";
 
 // interface AuthProps {}
@@ -23,18 +23,22 @@ export const defaultAuthHook: AuthHook = {
 
 const useAuth: () => AuthHook = () => {
   const [token, setToken] = useState<string>("");
-  const [authStatus, setAuthStatus] = useState<AuthStatus>("auth");
+  const [authStatus, setAuthStatus] = useState<AuthStatus>("loading");
 
   const { fetcher } = useFetcher({ token: token });
 
-  const login = (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     // fetcher;
   };
 
-  const logout = () => {
+  const logout = async () => {
     setToken("");
     setAuthStatus("unauth");
   };
+
+  useEffect(() => {
+    setAuthStatus("unauth");
+  }, []);
 
   return {
     token,

@@ -4,11 +4,16 @@ import { useContext } from "react";
 import { GlobalContext } from "../../Context/GlobalContext";
 import MobileNav from "./MobileNav";
 import useScrollToSection from "../../Hooks/Navigation/useScrollToSection";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface DesktopNavProps {}
 
 const DesktopNav: React.FC<DesktopNavProps> = () => {
+  const navigate = useNavigate();
+
+  const navigateTo = (link: string) => {
+    navigate(link);
+  };
   const { scrollToSection } = useScrollToSection();
   const { authStatus } = useContext(GlobalContext);
 
@@ -83,13 +88,21 @@ const DesktopNav: React.FC<DesktopNavProps> = () => {
         <ToggleColorMode />
         {authStatus === "unauth" && (
           <>
-            <Link to="/login">
-              <Button color="primary" variant="text" size="small">
-                Sign in
-              </Button>
-            </Link>
+            <Button
+              onClick={() => navigateTo("/login")}
+              color="primary"
+              variant="text"
+              size="small"
+            >
+              Sign in
+            </Button>
             <Link to="/signup">
-              <Button color="primary" variant="contained" size="small">
+              <Button
+                onClick={() => navigateTo("/signup")}
+                color="primary"
+                variant="contained"
+                size="small"
+              >
                 Sign up
               </Button>
             </Link>

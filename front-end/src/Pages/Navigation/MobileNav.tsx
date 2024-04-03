@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ToggleColorMode from "./ToggleColorMode";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../Context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 
 interface MobileNavProps {
   scrollToSection: (sectionId: string) => void;
@@ -10,6 +11,12 @@ interface MobileNavProps {
 
 const MobileNav: React.FC<MobileNavProps> = ({ scrollToSection }) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const navigateTo = (link: string) => {
+    navigate(link);
+    setOpen(false);
+  };
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -67,11 +74,9 @@ const MobileNav: React.FC<MobileNavProps> = ({ scrollToSection }) => {
               <>
                 <MenuItem>
                   <Button
+                    onClick={() => navigateTo("/signup")}
                     color="primary"
                     variant="contained"
-                    component="a"
-                    href="/material-ui/getting-started/templates/sign-up/"
-                    target="_blank"
                     sx={{ width: "100%" }}
                   >
                     Sign up
@@ -79,11 +84,9 @@ const MobileNav: React.FC<MobileNavProps> = ({ scrollToSection }) => {
                 </MenuItem>
                 <MenuItem>
                   <Button
+                    onClick={() => navigateTo("/login")}
                     color="primary"
                     variant="outlined"
-                    component="a"
-                    href="/material-ui/getting-started/templates/sign-in/"
-                    target="_blank"
                     sx={{ width: "100%" }}
                   >
                     Sign in
