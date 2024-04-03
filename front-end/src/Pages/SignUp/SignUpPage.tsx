@@ -11,7 +11,8 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
+import { useForm } from "react-hook-form";
 
 function Copyright(props: any) {
   return (
@@ -35,14 +36,11 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 const SignUpPage = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -61,17 +59,26 @@ const SignUpPage = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit((data) => console.log(data))}
+          sx={{ mt: 3 }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="given-name"
-                name="firstName"
                 required
                 fullWidth
                 id="firstName"
                 label="First Name"
                 autoFocus
+                error={errors?.firstName ? true : false}
+                {...register("firstName", {
+                  required: true,
+                })}
+                helperText={(errors?.firstName?.message ?? "") + ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -80,8 +87,12 @@ const SignUpPage = () => {
                 fullWidth
                 id="lastName"
                 label="Last Name"
-                name="lastName"
                 autoComplete="family-name"
+                error={errors?.lastName ? true : false}
+                {...register("lastName", {
+                  required: true,
+                })}
+                helperText={(errors?.lastName?.message ?? "") + ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -90,19 +101,38 @@ const SignUpPage = () => {
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"
                 autoComplete="email"
+                error={errors?.email ? true : false}
+                {...register("email", {
+                  required: true,
+                  pattern: {
+                    message: "Invalid email address",
+                    value:
+                      /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
+                  },
+                })}
+                helperText={(errors?.email?.message ?? "") + ""}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                error={errors?.password ? true : false}
+                {...register("password", {
+                  required: true,
+                  pattern: {
+                    value:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    message:
+                      "Password requires: uppercase, lowercase, number, special character, and min 8 characters",
+                  },
+                })}
+                helperText={(errors?.password?.message ?? "") + ""}
               />
             </Grid>
             <Grid item xs={12}>
