@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { GlobalContext } from "../../Context/GlobalContext";
 import MobileNav from "./MobileNav";
 import useScrollToSection from "../../Hooks/Navigation/useScrollToSection";
+import { Link } from "react-router-dom";
 
 interface DesktopNavProps {}
 
@@ -82,26 +83,16 @@ const DesktopNav: React.FC<DesktopNavProps> = () => {
         <ToggleColorMode />
         {authStatus === "unauth" && (
           <>
-            <Button
-              color="primary"
-              variant="text"
-              size="small"
-              component="a"
-              href="/material-ui/getting-started/templates/sign-in/"
-              target="_blank"
-            >
-              Sign in
-            </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              component="a"
-              href="/material-ui/getting-started/templates/sign-up/"
-              target="_blank"
-            >
-              Sign up
-            </Button>
+            <Link to="/login">
+              <Button color="primary" variant="text" size="small">
+                Sign in
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button color="primary" variant="contained" size="small">
+                Sign up
+              </Button>
+            </Link>
           </>
         )}
       </Box>
