@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { GlobalContext } from "../../Context/GlobalContext";
 
 function ToggleColorMode() {
-  const { togglePaletteMode, paletteMode } = useContext(GlobalContext);
+  const { togglePaletteMode, paletteOptions } = useContext(GlobalContext);
   return (
     <Box sx={{ maxWidth: "32px" }}>
       <Button
@@ -17,7 +17,7 @@ function ToggleColorMode() {
         aria-label="button to toggle theme"
         sx={{ minWidth: "32px", height: "32px", p: "4px" }}
       >
-        {paletteMode === "dark" ? (
+        {paletteOptions.mode === "dark" ? (
           <WbSunnyRoundedIcon fontSize="small" />
         ) : (
           <ModeNightRoundedIcon fontSize="small" />

@@ -1,19 +1,15 @@
 import { Outlet } from "react-router-dom";
 import { AppBar, Container, Toolbar } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useScrollToSection from "../../Hooks/Navigation/useScrollToSection";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
+import ProfileNav from "./ProfileNav";
+import { GlobalContext } from "../../Context/GlobalContext";
 
 const Navbar: React.FC = () => {
-  const [open, setOpen] = useState(false);
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
-  const { scrollToSection } = useScrollToSection({ setOpen });
-
+  const { authStatus } = useContext(GlobalContext);
+  const showProfileNav = authStatus === "auth" || authStatus === "loading";
   return (
     <div>
       <div>
@@ -49,12 +45,8 @@ const Navbar: React.FC = () => {
                     : "0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)",
               })}
             >
-              <DesktopNav scrollToSection={scrollToSection} />
-              <MobileNav
-                scrollToSection={scrollToSection}
-                open={open}
-                toggleDrawer={toggleDrawer}
-              />
+              <DesktopNav />
+              {showProfileNav && <ProfileNav />}
             </Toolbar>
           </Container>
         </AppBar>

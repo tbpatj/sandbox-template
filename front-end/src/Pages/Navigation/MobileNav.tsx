@@ -1,18 +1,21 @@
 import { Box, Button, Divider, Drawer, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ToggleColorMode from "./ToggleColorMode";
+import { useContext, useState } from "react";
+import { GlobalContext } from "../../Context/GlobalContext";
 
 interface MobileNavProps {
   scrollToSection: (sectionId: string) => void;
-  open: boolean;
-  toggleDrawer: (newOpen: boolean) => () => void;
 }
 
-const MobileNav: React.FC<MobileNavProps> = ({
-  scrollToSection,
-  open,
-  toggleDrawer,
-}) => {
+const MobileNav: React.FC<MobileNavProps> = ({ scrollToSection }) => {
+  const [open, setOpen] = useState(false);
+
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpen(newOpen);
+  };
+  const { authStatus } = useContext(GlobalContext);
+
   return (
     <>
       <Box sx={{ display: { sm: "", md: "none" } }}>
@@ -25,7 +28,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
         >
           <MenuIcon />
         </Button>
-        <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+        <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
           <Box
             sx={{
               minWidth: "60dvw",
@@ -39,9 +42,11 @@ const MobileNav: React.FC<MobileNavProps> = ({
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "end",
+                justifyContent: "space-between",
                 flexGrow: 1,
               }}
             >
+              {/* <ProfileNav /> */}
               <ToggleColorMode />
             </Box>
             <MenuItem onClick={() => scrollToSection("features")}>
@@ -58,30 +63,34 @@ const MobileNav: React.FC<MobileNavProps> = ({
             </MenuItem>
             <MenuItem onClick={() => scrollToSection("faq")}>FAQ</MenuItem>
             <Divider />
-            <MenuItem>
-              <Button
-                color="primary"
-                variant="contained"
-                component="a"
-                href="/material-ui/getting-started/templates/sign-up/"
-                target="_blank"
-                sx={{ width: "100%" }}
-              >
-                Sign up
-              </Button>
-            </MenuItem>
-            <MenuItem>
-              <Button
-                color="primary"
-                variant="outlined"
-                component="a"
-                href="/material-ui/getting-started/templates/sign-in/"
-                target="_blank"
-                sx={{ width: "100%" }}
-              >
-                Sign in
-              </Button>
-            </MenuItem>
+            {authStatus === "unauth" && (
+              <>
+                <MenuItem>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    component="a"
+                    href="/material-ui/getting-started/templates/sign-up/"
+                    target="_blank"
+                    sx={{ width: "100%" }}
+                  >
+                    Sign up
+                  </Button>
+                </MenuItem>
+                <MenuItem>
+                  <Button
+                    color="primary"
+                    variant="outlined"
+                    component="a"
+                    href="/material-ui/getting-started/templates/sign-in/"
+                    target="_blank"
+                    sx={{ width: "100%" }}
+                  >
+                    Sign in
+                  </Button>
+                </MenuItem>
+              </>
+            )}
           </Box>
         </Drawer>
       </Box>

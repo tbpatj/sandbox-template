@@ -1,16 +1,12 @@
 import { useState } from "react";
 
-interface ScrollToSectionProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface ScrollToSectionProps {}
 
 interface ScrollToSection {
   scrollToSection: (sectionId: string) => void;
 }
 
-const useScrollToSection: (props: ScrollToSectionProps) => ScrollToSection = ({
-  setOpen,
-}) => {
+const useScrollToSection: () => ScrollToSection = () => {
   const scrollToSection = (sectionId: string) => {
     const sectionElement = document.getElementById(sectionId);
     const offset = 128;
@@ -21,7 +17,6 @@ const useScrollToSection: (props: ScrollToSectionProps) => ScrollToSection = ({
         top: targetScroll,
         behavior: "smooth",
       });
-      setOpen(false);
     }
   };
 
