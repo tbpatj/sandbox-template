@@ -1,19 +1,14 @@
-import {
-  Avatar,
-  Badge,
-  Button,
-  Menu,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { Avatar, Menu, MenuItem } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../Context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileNavProps {}
 
 const ProfileNav: React.FC<ProfileNavProps> = () => {
-  const { authStatus, logout } = useContext(GlobalContext);
+  const { authStatus, logout, user } = useContext(GlobalContext);
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -23,9 +18,10 @@ const ProfileNav: React.FC<ProfileNavProps> = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     handleClose();
-    logout();
+    await logout();
+    navigate("/login");
   };
 
   return (
@@ -38,7 +34,9 @@ const ProfileNav: React.FC<ProfileNavProps> = () => {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        {authStatus === "auth" && <Avatar>T</Avatar>}
+        {authStatus === "auth" && (
+          <Avatar>{user.username?.[0]?.toUpperCase()}</Avatar>
+        )}
       </LoadingButton>
       <Menu
         id="basic-menu"

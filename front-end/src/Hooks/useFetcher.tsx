@@ -60,8 +60,8 @@ const useFetcher: (props: UseFetcherProps) => UseFetcher = ({ token }) => {
           const response = await axios(options);
           return response;
         }
-      } catch (err) {
-        return null;
+      } catch (err: any) {
+        return err?.response?.data ?? null;
       }
     },
     [token]

@@ -3,16 +3,16 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useForm } from "react-hook-form";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GlobalContext } from "../../Context/GlobalContext";
+import { Link, useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 function Copyright(props: any) {
   return (
@@ -22,12 +22,12 @@ function Copyright(props: any) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {/* {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
       </Link>{" "}
       {new Date().getFullYear()}
-      {"."}
+      {"."} */}
     </Typography>
   );
 }
@@ -35,12 +35,30 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const LoginPage = () => {
+  const [processingRequest, setProcessingRequest] = useState(false);
+  const navigate = useNavigate();
   const { login } = useContext(GlobalContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useForm();
+
+  const onSubmit = async (data: any) => {
+    console.log("data", data);
+    //set to true so the user knows that we are processing the login in case it takes a while
+    setProcessingRequest(true);
+    const response = await login(data.email, data.password, data.remember);
+    //if there is an error then set the error message for the submit button
+    if (response?.error) {
+      setError("submit", { type: "custom", message: response.error.message });
+    } else {
+      navigate("/dashboard");
+    }
+    setProcessingRequest(false);
+  };
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
@@ -64,7 +82,7 @@ const LoginPage = () => {
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
           sx={{
-            marginTop: "max(30%,200px)",
+            marginTop: "min(30vh,300px)",
             mx: 4,
             display: "flex",
             flexDirection: "column",
@@ -80,7 +98,7 @@ const LoginPage = () => {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit((data) => console.log(data))}
+            onSubmit={handleSubmit((data) => onSubmit(data))}
             sx={{ mt: 1 }}
           >
             <TextField
@@ -120,28 +138,53 @@ const LoginPage = () => {
               error={errors?.password ? true : false}
               helperText={(errors?.password?.message ?? "") + ""}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
+            <Grid item xs={12}>
+              <Checkbox
+                {...register("remember")}
+                id="remember-user"
+                value="remember"
+                color="primary"
+              />
+              <Typography component={"label"} htmlFor="remember-user">
+                Remember me
+              </Typography>
+            </Grid>
+            <Box sx={{ m: 1, position: "relative" }}>
+              <Button
+                type="submit"
+                fullWidth
+                onClick={() => clearErrors("submit")}
+                disabled={processingRequest}
+                variant="contained"
+                color={errors?.submit ? "error" : "primary"}
+                sx={{ mt: 3, mb: 4 }}
+              >
+                Sign In
+              </Button>
+              {processingRequest && (
+                <CircularProgress
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: "-12px",
+                    marginLeft: "-12px",
+                  }}
+                  size={24}
+                ></CircularProgress>
+              )}
+              {errors?.submit && (
+                <Typography sx={{ mt: -3 }} color="error" variant="body2">
+                  {errors?.submit?.message + ""}
+                </Typography>
+              )}
+            </Box>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+              <Grid xs={12} item>
+                <Link to="/forgot-password">Forgot password?</Link>
               </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+              <Grid xs={12} item>
+                <Link to="/signup">Don't have an account? Sign Up</Link>
               </Grid>
             </Grid>
             <Copyright sx={{ mt: 5 }} />

@@ -5,6 +5,14 @@ import { GlobalContext } from "../../Context/GlobalContext";
 import MobileNav from "./MobileNav";
 import useScrollToSection from "../../Hooks/Navigation/useScrollToSection";
 import { Link, useNavigate } from "react-router-dom";
+import UnauthNav from "./Menus/UnauthNav";
+import AuthNav from "./Menus/AuthNav";
+
+const logoStyle = {
+  width: "140px",
+  height: "auto",
+  cursor: "pointer",
+};
 
 interface DesktopNavProps {}
 
@@ -14,7 +22,6 @@ const DesktopNav: React.FC<DesktopNavProps> = () => {
   const navigateTo = (link: string) => {
     navigate(link);
   };
-  const { scrollToSection } = useScrollToSection();
   const { authStatus } = useContext(GlobalContext);
 
   return (
@@ -27,56 +34,18 @@ const DesktopNav: React.FC<DesktopNavProps> = () => {
           px: 0,
         }}
       >
-        <MobileNav scrollToSection={scrollToSection} />
-        {/* <img
-    src={
-      "https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg"
-    }
-    //   style={logoStyle}
-    alt="logo of sitemark"
-  /> */}
-        <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <MenuItem
-            onClick={() => scrollToSection("features")}
-            sx={{ py: "6px", px: "12px" }}
-          >
-            <Typography variant="body2" color="text.primary">
-              Features
-            </Typography>
-          </MenuItem>
-          <MenuItem
-            onClick={() => scrollToSection("testimonials")}
-            sx={{ py: "6px", px: "12px" }}
-          >
-            <Typography variant="body2" color="text.primary">
-              Testimonials
-            </Typography>
-          </MenuItem>
-          <MenuItem
-            onClick={() => scrollToSection("highlights")}
-            sx={{ py: "6px", px: "12px" }}
-          >
-            <Typography variant="body2" color="text.primary">
-              Highlights
-            </Typography>
-          </MenuItem>
-          <MenuItem
-            onClick={() => scrollToSection("pricing")}
-            sx={{ py: "6px", px: "12px" }}
-          >
-            <Typography variant="body2" color="text.primary">
-              Pricing
-            </Typography>
-          </MenuItem>
-          <MenuItem
-            onClick={() => scrollToSection("faq")}
-            sx={{ py: "6px", px: "12px" }}
-          >
-            <Typography variant="body2" color="text.primary">
-              FAQ
-            </Typography>
-          </MenuItem>
-        </Box>
+        <MobileNav />
+        <Link to="/">
+          <img
+            src={
+              "https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg"
+            }
+            style={logoStyle}
+            alt="logo of sitemark"
+          />
+        </Link>
+        {authStatus === "unauth" && <UnauthNav />}
+        {authStatus === "auth" && <AuthNav />}
       </Box>
       <Box
         sx={{

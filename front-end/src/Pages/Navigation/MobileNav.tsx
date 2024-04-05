@@ -1,22 +1,15 @@
-import { Box, Button, Divider, Drawer, MenuItem } from "@mui/material";
+import { Box, Button, Drawer } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ToggleColorMode from "./ToggleColorMode";
 import { useContext, useState } from "react";
 import { GlobalContext } from "../../Context/GlobalContext";
-import { useNavigate } from "react-router-dom";
+import UnauthMobileNav from "./Menus/UnauthMobileNav";
+import AuthMobileNav from "./Menus/AuthMobileNav";
 
-interface MobileNavProps {
-  scrollToSection: (sectionId: string) => void;
-}
+interface MobileNavProps {}
 
-const MobileNav: React.FC<MobileNavProps> = ({ scrollToSection }) => {
+const MobileNav: React.FC<MobileNavProps> = ({}) => {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const navigateTo = (link: string) => {
-    navigate(link);
-    setOpen(false);
-  };
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -56,44 +49,8 @@ const MobileNav: React.FC<MobileNavProps> = ({ scrollToSection }) => {
               {/* <ProfileNav /> */}
               <ToggleColorMode />
             </Box>
-            <MenuItem onClick={() => scrollToSection("features")}>
-              Features
-            </MenuItem>
-            <MenuItem onClick={() => scrollToSection("testimonials")}>
-              Testimonials
-            </MenuItem>
-            <MenuItem onClick={() => scrollToSection("highlights")}>
-              Highlights
-            </MenuItem>
-            <MenuItem onClick={() => scrollToSection("pricing")}>
-              Pricing
-            </MenuItem>
-            <MenuItem onClick={() => scrollToSection("faq")}>FAQ</MenuItem>
-            <Divider />
-            {authStatus === "unauth" && (
-              <>
-                <MenuItem>
-                  <Button
-                    onClick={() => navigateTo("/signup")}
-                    color="primary"
-                    variant="contained"
-                    sx={{ width: "100%" }}
-                  >
-                    Sign up
-                  </Button>
-                </MenuItem>
-                <MenuItem>
-                  <Button
-                    onClick={() => navigateTo("/login")}
-                    color="primary"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                  >
-                    Sign in
-                  </Button>
-                </MenuItem>
-              </>
-            )}
+            {authStatus === "unauth" && <UnauthMobileNav setOpen={setOpen} />}
+            {authStatus === "auth" && <AuthMobileNav setOpen={setOpen} />}
           </Box>
         </Drawer>
       </Box>
